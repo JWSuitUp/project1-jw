@@ -35,48 +35,48 @@
 00000000000i[MEM0 ] mem block size = 0x00100000, blocks=32
 00000000000i[MEM0 ] rom at 0xfffe0000/131072 ('/Users/mac/Documents/Comp354Projects/bochs-2.4.2/bios/BIOS-bochs-latest')
 00000000000i[MEM0 ] rom at 0xc0000/40448 ('/Users/mac/Documents/Comp354Projects/bochs-2.4.2/bios/VGABIOS-lgpl-latest')
-00000000000i[     ] lt_dlhandle is 0x1167510
+00000000000i[     ] lt_dlhandle is 0x1138d20
 00000000000i[PLGIN] loaded plugin libbx_cmos.la
-00000000000i[     ] lt_dlhandle is 0x1167660
+00000000000i[     ] lt_dlhandle is 0x152ea80
 00000000000i[PLGIN] loaded plugin libbx_dma.la
-00000000000i[     ] lt_dlhandle is 0x1167a90
+00000000000i[     ] lt_dlhandle is 0x152f010
 00000000000i[PLGIN] loaded plugin libbx_pic.la
-00000000000i[     ] lt_dlhandle is 0x1168200
+00000000000i[     ] lt_dlhandle is 0x152f360
 00000000000i[PLGIN] loaded plugin libbx_pit.la
-00000000000i[     ] lt_dlhandle is 0x1500380
+00000000000i[     ] lt_dlhandle is 0x11391e0
 00000000000i[PLGIN] loaded plugin libbx_vga.la
-00000000000i[     ] lt_dlhandle is 0x15003b0
+00000000000i[     ] lt_dlhandle is 0x152f6e0
 00000000000i[PLGIN] loaded plugin libbx_floppy.la
-00000000000i[     ] lt_dlhandle is 0x1600490
+00000000000i[     ] lt_dlhandle is 0x16006b0
 00000000000i[PLGIN] loaded plugin libbx_pci.la
-00000000000i[     ] lt_dlhandle is 0x1600630
+00000000000i[     ] lt_dlhandle is 0x16006e0
 00000000000i[PLGIN] loaded plugin libbx_pci2isa.la
-00000000000i[     ] lt_dlhandle is 0x1600910
+00000000000i[     ] lt_dlhandle is 0x1139820
 00000000000i[PLGIN] loaded plugin libbx_unmapped.la
-00000000000i[     ] lt_dlhandle is 0x1168570
+00000000000i[     ] lt_dlhandle is 0x1139980
 00000000000i[PLGIN] loaded plugin libbx_biosdev.la
-00000000000i[     ] lt_dlhandle is 0x11686f0
+00000000000i[     ] lt_dlhandle is 0x1139d70
 00000000000i[PLGIN] loaded plugin libbx_speaker.la
-00000000000i[     ] lt_dlhandle is 0x11689d0
+00000000000i[     ] lt_dlhandle is 0x113a200
 00000000000i[PLGIN] loaded plugin libbx_extfpuirq.la
-00000000000i[     ] lt_dlhandle is 0x1400810
+00000000000i[     ] lt_dlhandle is 0x152f9d0
 00000000000i[PLGIN] loaded plugin libbx_gameport.la
-00000000000i[     ] lt_dlhandle is 0x14009a0
+00000000000i[     ] lt_dlhandle is 0x152fb60
 00000000000i[PLGIN] loaded plugin libbx_pci_ide.la
-00000000000i[     ] lt_dlhandle is 0x1400d60
+00000000000i[     ] lt_dlhandle is 0x113a580
 00000000000i[PLGIN] loaded plugin libbx_acpi.la
-00000000000i[     ] lt_dlhandle is 0x16012a0
+00000000000i[     ] lt_dlhandle is 0x1530460
 00000000000i[PLGIN] loaded plugin libbx_ioapic.la
-00000000000i[     ] lt_dlhandle is 0x1601430
+00000000000i[     ] lt_dlhandle is 0x15305f0
 00000000000i[PLGIN] loaded plugin libbx_keyboard.la
-00000000000i[     ] lt_dlhandle is 0x1601b00
+00000000000i[     ] lt_dlhandle is 0x1530a20
 00000000000i[PLGIN] loaded plugin libbx_harddrv.la
-00000000000i[     ] lt_dlhandle is 0x1601c70
+00000000000i[     ] lt_dlhandle is 0x1530f80
 00000000000i[PLGIN] loaded plugin libbx_serial.la
-00000000000i[     ] lt_dlhandle is 0x1601f20
+00000000000i[     ] lt_dlhandle is 0x1531320
 00000000000i[PLGIN] loaded plugin libbx_parallel.la
 00000000000i[CMOS ] Using local time for initial clock
-00000000000i[CMOS ] Setting initial clock to: Mon Feb  8 16:48:20 2016 (time0=1454968100)
+00000000000i[CMOS ] Setting initial clock to: Mon Feb  8 20:45:19 2016 (time0=1454982319)
 00000000000i[DMA  ] channel 4 used by cascade
 00000000000i[DMA  ] channel 2 used by Floppy Drive
 00000000000i[FDD  ] fd0: 'floppya.img' ro=0, h=2,t=80,spt=18
@@ -179,5 +179,5 @@
 00001910157i[BIOS ] bios_table_cur_addr: 0x000fbcb4
 00003000000i[XGUI ] charmap update. Font Height is 16
 00032315724i[BIOS ] Booting from 0000:7c00
-00033450313i[CPU0 ] LOCK prefix unallowed (op1=0x53, attr=0x0, mod=0x0, nnn=0)
-00033450317i[CPU0 ] LOCK prefix unallowed (op1=0x53, attr=0x0, mod=0x0, nnn=0)
+00033463048i[CPU0 ] LOCK prefix unallowed (op1=0x53, attr=0x0, mod=0x0, nnn=0)
+00033463052i[CPU0 ] LOCK prefix unallowed (op1=0x53, attr=0x0, mod=0x0, nnn=0)
