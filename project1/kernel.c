@@ -55,3 +55,5 @@ void putString(char* letter, int row, int col, int color){
     }
 }
 
+
+
