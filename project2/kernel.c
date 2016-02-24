@@ -6,10 +6,35 @@ void putChar(char letter, int row, int col, int color);
 void putString(char* letter, int row, int col, int color);
 int printString(char *str);
 int readChar();
+int readSector(char *buf, int absSector);
+int mod(int num);
+int handleInterrupt21(int ax, int bx, int cx, int dx);
 //main method
 int main(){
     
-    printString("Hello World\0");
+    //printString("Hello Joanna \0");
+    
+//    char *buf = “*****\0”;
+//    char ch;
+//    int fullCh;
+//    byte scanCode;
+
+//    printString("Type a char: \0");
+//    ch = readChar();
+//    buf[2] = ch;
+//    printString("Read: \0");
+//    printString(buf);
+//    printString("\n\r\0");
+    
+//    char buffer[512];
+//    readSector(buffer, 30);
+//    printString(buffer);
+    
+    makeInterrupt21();
+    interrupt(0x21, 0x00, 0, 0, 0);
+
+    
+    
 }
 
 int printString(char *str){
@@ -21,12 +46,31 @@ int printString(char *str){
         interrupt(0x10, ax, 0, 0, 0);
         i++;
     }
+    //return i;
 }
 
-int readChar(){
+//int readChar(){
+//    
+//    interrupt(0x16, 0x00, 0, 0, 0);
+//    
+//}
+
+int readSector(char *buf, int absSector){
+    relSector = mod(absSector, 18)+ 1;
+    head = mod((absSector/18), 2);
+    track = absSector / 36;
     
 }
 
+int mod(int divider, dividend){
+    int result = divider - (divider / dividend);
+    return result;
+}
+
+int handleInterrupt21(int ax, int bx, int cx, int dx){
+    printString("Quit Interrupting!\0");
+    return 0;
+}
 
 
 //the putChat function
