@@ -17,24 +17,26 @@ int main(){
     char ch;
     int fullCh;
     char scanCode;
-    char a;
     
-    //Test printString
+    char line[80];
+    char ah[1];
+    
+      //Test printString
 //    printString("Hello Joanna\0");
-    
-    //Test readChar
+//    
+      //Test readChar
 //    printString("Type a char: \0");
 //    ch = readChar();
 //    buf[2] = ch;
 //    printString("Read: \0");
 //    printString(buf);
 //    printString("\n\r\0");
-
-    //Test readString
-//    printString("Enter a line: \0");
-//    readString(buf);
-//    printString("\n\0");
-//    printString(buf);
+//
+      //Test readString
+    printString("Enter a line: \0");
+    readString(buf);
+    printString("\n\0");
+    printString(buf);
     
     //Test readSector
 //    char buffer[512];
@@ -42,8 +44,19 @@ int main(){
 //    printString(buffer);
     
     //Test makeInterrupt
-    makeInterrupt21();
-    interrupt(0x21,0x00,0,0,0);
+//    makeInterrupt21();
+//    interrupt(0x21,0x00,0,0,0);
+    
+    
+    //Test makeInterrupt21
+//    makeInterrupt21();	// setup ISR for interrupt 0x21
+//    
+//    interrupt(0x21, 0x00, "Type>\0", 0, 0);	// display prompt
+//    interrupt(0x21, 0x11, buf, 0, 0);			  // read char
+//    line[0] = buf[0];
+//    line[1] = 0x00;
+//    interrupt(0x21, 0x00, line, 0, 0);			// print string
+    while(1>0){}
 
     
 }
@@ -74,6 +87,7 @@ int printString(char *str){
 
 //readChar method
 int readChar(){
+
     return interrupt(0x16, 0x00, 0, 0, 0);
 }
 
@@ -82,10 +96,21 @@ int readString(char *buf){
     int i = 0;
     int result;
     while(i == 0 ||buf[i-1] != 0x0D){
+        if (buf[i-1] == 0x08) {
+            //interrupt(0x10,0x08, 0, 0, 0);
+            //interrupt(0x10,'x', 0, 0, 0);
+            //interrupt(0x10,0x08, 0, 0, 0);
+            buf[i-1] = ' ';
+            i--;
+        }
+        else {
         result =readChar()%256;
         buf[i] =result;
+        interrupt(0x10,0x0E*256+result, 0, 0, 0);
         i++;
+        }
     }
+
     
     buf[i++] = 0;
     return i - 1;
@@ -110,22 +135,30 @@ int mod(int divider, int dividend){
     return result;
 }
 
-//The handleInterrupt function
-int handleInterrupt21(int ax, int bx, int cx, int dx){
-    if (ax = 0x00) {
-    
-    }
-    else if(ax = 0x11){
-        
-    }
-    else if(ax = 0x01){
-        
-    }
 
-    //printString("Quit Interrupting!\0");
+
+
+int handleInterrupt21(int ax, int bx, int cx, int dx){
+    if (ax == 0x00) {
+         printString(bx);
+        return 1;
+    }
+    else if(ax == 0x11){
+        ((char*)bx)[0] = readChar();
+        return 1;
+    }
+    else if(ax == 0x01){
+        readString(bx);
+        return 1;
+
+    }
+    else{
+    
     return -1;
+    }
 }
-//the putChat function
+
+//the putChar function
 //Parameters: letter to be printed, row and col of the desired location, color of the letters
 void putChar(char letter, int row, int col, int color){
     int letterAddress = (80*(row -1) + col)*2 + 0x8000; // calculate the address to store the character
