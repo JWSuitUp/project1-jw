@@ -1,7 +1,7 @@
 # Set the necessary paths for the COMP354 OS Projects.
 
 # Set this variable to the path to the Comp354Projects directory.
-COMP354_HOME=/Users/mac/Documents/Comp354Projects
+COMP354_HOME=/Users/mac/Documents/Comp354Projects/project1-jw
 
 # Add environment variables for Bochs and add it to the path.
 export BOCHS_HOME=$COMP354_HOME/bochs-2.4.2
