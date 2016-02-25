@@ -1,7 +1,7 @@
 //kernel.c
 //author: Joanna Wang
-//Date: 2/9/2016
-//signatures
+//Date: 2/25/2016
+//prototype 
 void putChar(char letter, int row, int col, int color);
 void putString(char* letter, int row, int col, int color);
 int printString(char *str);
@@ -23,7 +23,7 @@ int main(){
     
       //Test printString
 //    printString("Hello Joanna\0");
-//    
+
       //Test readChar
 //    printString("Type a char: \0");
 //    ch = readChar();
@@ -33,10 +33,10 @@ int main(){
 //    printString("\n\r\0");
 //
       //Test readString
-    printString("Enter a line: \0");
-    readString(buf);
-    printString("\n\0");
-    printString(buf);
+//    printString("Enter a line: \0");
+//    readString(buf);
+//    printString("\n\0");
+//    printString(buf);
     
     //Test readSector
 //    char buffer[512];
@@ -56,6 +56,7 @@ int main(){
 //    line[0] = buf[0];
 //    line[1] = 0x00;
 //    interrupt(0x21, 0x00, line, 0, 0);			// print string
+    
     while(1>0){}
 
     
@@ -74,6 +75,7 @@ int printString(char *str){
     }
      result = i - 1;
     
+    //Test for the return result
 //    for(;result >= 0;result--){
 //        char al = '*';
 //        char ah = 0x0E;
@@ -92,11 +94,12 @@ int readChar(){
 }
 
 //readString method
+//(The kernel improvement part is not working. But the orinignal code should be working)
 int readString(char *buf){
     int i = 0;
     int result;
     while(i == 0 ||buf[i-1] != 0x0D){
-        if (buf[i-1] == 0x08) {
+        //if (buf[i-1] == 0x08) {
             //interrupt(0x10,0x08, 0, 0, 0);
             //printString(" ");
 
@@ -104,14 +107,14 @@ int readString(char *buf){
             //interrupt(0x10,0x08, 0, 0, 0);
             //buf[i] = ' ';
             //interrupt(0x10,'x', 0, 0, 0);
-            i--;
-        }
-        else {
+            //i--;
+        //}
+        //else {
         result =readChar()%256;
         buf[i] =result;
         interrupt(0x10,0x0E*256+result, 0, 0, 0);
         i++;
-        }
+        //}
     }
 
 
@@ -124,6 +127,8 @@ int readSector(char *buf, int absSector){
     int relSector = mod(absSector, 18)+ 1;
     int head = mod((absSector/18), 2);
     int track = absSector / 36;
+    
+    //Calculate for the values of ax,bx,cx,dx
     int ax = 0x02 * 256 + 0x01;
     int bx = buf;
     int cx = track * 256 + relSector;
@@ -132,7 +137,7 @@ int readSector(char *buf, int absSector){
     return 1;
 }
 
-//The mod function
+//The mod function.Return the mod.
 int mod(int divider, int dividend){
     int result = divider - (divider / dividend)* dividend;
     return result;
@@ -140,7 +145,7 @@ int mod(int divider, int dividend){
 
 
 
-
+//The handelInterrupt21 function
 int handleInterrupt21(int ax, int bx, int cx, int dx){
     if (ax == 0x00) {
          printString(bx);
@@ -156,7 +161,6 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
 
     }
     else{
-    
     return -1;
     }
 }
