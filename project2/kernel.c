@@ -98,9 +98,12 @@ int readString(char *buf){
     while(i == 0 ||buf[i-1] != 0x0D){
         if (buf[i-1] == 0x08) {
             //interrupt(0x10,0x08, 0, 0, 0);
+            //printString(" ");
+
             //interrupt(0x10,'x', 0, 0, 0);
             //interrupt(0x10,0x08, 0, 0, 0);
-            buf[i-1] = ' ';
+            //buf[i] = ' ';
+            //interrupt(0x10,'x', 0, 0, 0);
             i--;
         }
         else {
@@ -111,7 +114,7 @@ int readString(char *buf){
         }
     }
 
-    
+
     buf[i++] = 0;
     return i - 1;
 }
