@@ -9,6 +9,9 @@ int readChar();
 int readString(char *buf);
 int readSector(char *buf, int absSector);
 int handleInterrupt21(int ax, int bx, int cx, int dx);
+int readfile(char *filename, char *buf);
+int locateFile(char * filename);
+int compareName(char * filename)
 
 //main method
 int main(){
@@ -59,6 +62,24 @@ int main(){
     
     while(1>0){}
 
+    
+}
+//readfile method
+int readfile(char *filename, char *buf){
+    readSector(buf,2);
+    if(filename. )
+    
+    
+}
+
+//locate file
+int locateFile(char * filename){
+    int i = 0;
+    for()
+}
+
+//compare name
+int compareName(char * filename){
     
 }
 
