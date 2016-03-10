@@ -16,71 +16,45 @@ int compareName(char * filename)
 //main method
 int main(){
     
-    char * buf = "***********************";
-    char ch;
-    int fullCh;
-    char scanCode;
-    
-    char line[80];
-    char ah[1];
-    
-      //Test printString
-//    printString("Hello Joanna\0");
 
-      //Test readChar
-//    printString("Type a char: \0");
-//    ch = readChar();
-//    buf[2] = ch;
-//    printString("Read: \0");
-//    printString(buf);
-//    printString("\n\r\0");
-//
-      //Test readString
-//    printString("Enter a line: \0");
-//    readString(buf);
-//    printString("\n\0");
-//    printString(buf);
-    
-    //Test readSector
-//    char buffer[512];
-//    readSector(buffer, 30);
-//    printString(buffer);
-    
-    //Test makeInterrupt
-//    makeInterrupt21();
-//    interrupt(0x21,0x00,0,0,0);
-    
-    
-    //Test makeInterrupt21
-//    makeInterrupt21();	// setup ISR for interrupt 0x21
-//    
-//    interrupt(0x21, 0x00, "Type>\0", 0, 0);	// display prompt
-//    interrupt(0x21, 0x11, buf, 0, 0);			  // read char
-//    line[0] = buf[0];
-//    line[1] = 0x00;
-//    interrupt(0x21, 0x00, line, 0, 0);			// print string
     
     while(1>0){}
 
     
 }
+
+struct dirEntry {
+    char name[6];
+    byte sectors[26];
+};
+
+struct directory {
+    struct dirEntry entries[16];
+};
+
 //readfile method
 int readfile(char *filename, char *buf){
-    readSector(buf,2);
-    if(filename. )
+    if(compareName(filename) == 1){
+        readSector(buf,2);
+    }
+    else{
+        return -1;
+    }
     
-    
-}
-
-//locate file
-int locateFile(char * filename){
-    int i = 0;
-    for()
 }
 
 //compare name
-int compareName(char * filename){
-    
+int compareName(char * filename1){
+    int i = 0;
+    int j = 0;
+    for(i; i <= 16; i++){
+        for(j; j<= 5; j++){
+            if(filename1[i] == dir.img.entries(i).name[j]){
+                return 1
+            }
+        }
+    }
+    return -1;
 }
 
 //printString method
@@ -96,14 +70,6 @@ int printString(char *str){
     }
      result = i - 1;
     
-    //Test for the return result
-//    for(;result >= 0;result--){
-//        char al = '*';
-//        char ah = 0x0E;
-//        int ax = ah * 256 + al;
-//        interrupt(0x10, ax, 0, 0, 0);
-//        
-//    }
     return result;
     
 }
