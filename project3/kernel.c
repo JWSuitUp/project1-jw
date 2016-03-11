@@ -34,6 +34,13 @@ struct directory {
 
 //readfile method
 int readfile(char *filename, char *buf){
+    char dir[512]
+    readSector(dir,2);
+    
+    int entry = compareName(filename,dir)
+    
+    readSector（buf, dir.entries[entry].sectors[0])
+    readSector（&buf[512], dir.entries[entry].sectors[1])
     if(compareName(filename) == 1){
         readSector(buf,2);
     }
@@ -48,11 +55,13 @@ int compareName(char * filename1){
     int i = 0;
     int j = 0;
     for(i; i <= 16; i++){
-        for(j; j<= 5; j++){
-            if(filename1[i] == dir.img.entries(i).name[j]){
-                return 1
+        int found = 1;
+        for(j; j<= 5 && found; j++){
+            if(filename1[j] != dir.entries[i].name[j]){
+                found = 0;
             }
         }
+        if found return i;
     }
     return -1;
 }
