@@ -9,4 +9,11 @@ dd if=map.img of=floppya.img bs=512 count=1 seek=1 conv=notrunc
 dd if=dir.img of=floppya.img bs=512 count=1 seek=2 conv=notrunc
 
 bcc -ansi -c -o loadFile loadFile.c #compile the loadFile.c
+
+#load uprog1
+as86 lib.asm -o lib.o
+bcc -ansi -c -o uprog1.o uprog1.c
+ld86 -o uprog1 -d uprog1.o lib.o
+./loadfile uprog1
+
 bochs -f opsys.bxrc
