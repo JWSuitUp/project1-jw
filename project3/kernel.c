@@ -12,6 +12,8 @@ int handleInterrupt21(int ax, int bx, int cx, int dx);
 int readfile(char *filename, char *buf);
 int locateFile(char * filename);
 int compareName(char * filename, directory dir);
+int executeProgram(char* name, int segment);
+int checkSegment(int segment);
 
 //main method
 int main(){
@@ -38,11 +40,12 @@ struct directory {
 
 //readfile method
 int readFile(char *filename, char *buf){
+
+    struct directory dir;
     int entry = compareName(filename,dir);
     int i = 0;
     int j = 0;
     int numSector = 0;
-    directory dir;
     readSector(dir,2);
     
     for(i; i<= 26; i++){
@@ -62,7 +65,7 @@ int readFile(char *filename, char *buf){
 };
 
 //compare name
-int compareName(char * filename1，directory dir){
+int compareName(char * filename1, struct directory dir){
     int i = 0;
     int j = 0;
     for(i; i <= 16; i++){
@@ -78,6 +81,35 @@ int compareName(char * filename1，directory dir){
         
     }
     return -1;
+};
+
+//int executeProgram(char* name, int segment){
+//    int i = 0;
+//    if(checkSegment(segment) == -1){
+//        return -2;
+//    }
+//    
+//    readFile(name, buf);
+//    for (i; i<=6; i++) {
+//        putInMemory(segment,0x0000,name[i]);
+//    }
+//    
+//};
+
+int checkSegment(int segment){
+    if (segment == 0x2000 ||
+        segment == 0x3000 ||
+        segment == 0x4000 ||
+        segment == 0x5000 ||
+        segment == 0x6000 ||
+        segment == 0x7000 ||
+        segment == 0x8000 ||
+        segment == 0x9000) {
+        return 1;
+    }
+    else{
+        return -1;
+    }
 };
 
 //printString method
@@ -172,6 +204,10 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
     }
     else if(ax = 0x03){
         readFile(bx,cx);
+    }
+    else if(ax = 0x04){
+        executeProgram(bx,cx);
+        
     }
     else{
     return -1;

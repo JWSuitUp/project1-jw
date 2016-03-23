@@ -126,6 +126,7 @@ _restoreDataSegment:
         push bx
         ret
 
+
 ;void resetSegments()
 ;resets the data, stack and execution segments
 ;to the kernel segment at 0x1000
@@ -137,4 +138,7 @@ _resetSegments:
 	mov es,ax
 	push bx
 	ret
+
+_memcpy:
+    ret
 
