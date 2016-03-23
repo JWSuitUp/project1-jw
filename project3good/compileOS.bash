@@ -9,9 +9,21 @@ dd if=map.img of=floppya.img bs=512 count=1 seek=1 conv=notrunc
 dd if=dir.img of=floppya.img bs=512 count=1 seek=2 conv=notrunc
 ./loadfile message.txt
 #load uprog1
+#as86 lib.asm -o lib.o
+#bcc -ansi -c -o uprog1.o uprog1.c
+#ld86 -o uprog1 -d uprog1.o lib.o
+#./loadfile uprog1
+
+#load uprog2
+#as86 lib.asm -o lib.o
+#bcc -ansi -c -o uprog2.o uprog2.c
+#ld86 -o uprog2 -d uprog2.o lib.o
+#./loadfile uprog2
+
+#load shell.c
 as86 lib.asm -o lib.o
-bcc -ansi -c -o uprog1.o uprog1.c
-ld86 -o uprog1 -d uprog1.o lib.o
-./loadfile uprog1
+bcc -ansi -c -o shell.o shell.c
+ld86 -o shell -d shell.o lib.o
+./loadfile shell
 
 bochs -f opsys.bxrc

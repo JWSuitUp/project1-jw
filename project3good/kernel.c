@@ -10,8 +10,12 @@ int readString(char *buf);
 int readSector(char *buf, int absSector);
 int handleInterrupt21(int ax, int bx, int cx, int dx);
 int readfile(char *filename, char *buf);
-int compareName(char * filename, directory dir);
 int compare(char *name, char *name2);
+int executeProgram(char* name, int segment);
+int checkSegment(int segment);
+void launchProgram(int segment);
+void terminate();
+void resetSegments();
 
 struct dirEntry {
     char name[6];
@@ -24,20 +28,26 @@ struct directory {
 
 //main method
 int main(){
-    
-    
-    struct directory * dir;
-    char buffer[13312];		/* the maximum size of a file*/
-    
+    //Test readFile
+//    struct directory * dir;
+//    char buffer[13312];		/* the maximum size of a file*/
+//    
+//
+//    makeInterrupt21();
+////    
+////    /*read the file into buffer*/
+//    interrupt(0x21, 0x03, "messag\0", buffer, 0);
+////    
+////    
+////    /*print out the file*/
+//    interrupt(0x21, 0x00, buffer, 0, 0);
 
+    
+    //Test executeProgram
     makeInterrupt21();
-//    
-//    /*read the file into buffer*/
-    interrupt(0x21, 0x03, "messag\0", buffer, 0);
-//    
-//    
-//    /*print out the file*/
-    interrupt(0x21, 0x00, buffer, 0, 0);
+    interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
+    interrupt(0x21, 0x00, "Done!\n\r\0", 0, 0);
+
 
     
     
@@ -86,7 +96,6 @@ int readFile(char *filename, char *buf){
 
 }
 
-
 int compare(char *name, char *name2){
     int i = 0;
     for(i; i<= 5; i++){
@@ -98,6 +107,49 @@ int compare(char *name, char *name2){
         }
     }
     
+}
+
+int executeProgram(char* name, int segment){
+    int i = 0;
+    int offset = 0x0000;
+    char buffer[512];
+    
+    if(checkSegment(segment) == -1){
+        return -2;
+    }
+
+    readFile(name, buffer);
+    
+    for (i; buffer[i] != 0xFF; i++) {
+        putInMemory(segment,offset,buffer[i]);
+        offset++;
+    }
+    
+    launchProgram(segment);
+    return 0;
+
+}
+
+int checkSegment(int segment){
+    if (segment == 0x2000 ||
+        segment == 0x3000 ||
+        segment == 0x4000 ||
+        segment == 0x5000 ||
+        segment == 0x6000 ||
+        segment == 0x7000 ||
+        segment == 0x8000 ||
+        segment == 0x9000) {
+        return 1;
+    }
+    else{
+        return -1;
+    }
+}
+
+void terminate(){
+    resetSegments();
+    printString("I'm back!");
+    while(1);
 }
 
 //readChar method
@@ -112,22 +164,12 @@ int readString(char *buf){
     int i = 0;
     int result;
     while(i == 0 ||buf[i-1] != 0x0D){
-        //if (buf[i-1] == 0x08) {
-            //interrupt(0x10,0x08, 0, 0, 0);
-            //printString(" ");
 
-            //interrupt(0x10,'x', 0, 0, 0);
-            //interrupt(0x10,0x08, 0, 0, 0);
-            //buf[i] = ' ';
-            //interrupt(0x10,'x', 0, 0, 0);
-            //i--;
-        //}
-        //else {
         result =readChar()%256;
         buf[i] =result;
         interrupt(0x10,0x0E*256+result, 0, 0, 0);
         i++;
-        //}
+        
     }
 
 
@@ -176,6 +218,12 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
     }
     else if(ax == 0x03){
         readFile(bx,cx);
+    }
+    else if(ax == 0x04){
+        executeProgram(bx,cx);
+    }
+    else if(ax == 0x05){
+        terminate();
     }
     else{
     return -1;
