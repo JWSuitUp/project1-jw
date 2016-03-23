@@ -22,7 +22,7 @@ int main(){
     char ah[1];
     
       //Test printString
-//    printString("Hello Joanna\0");
+    printString("Hello Joanna\0");
 
       //Test readChar
 //    printString("Type a char: \0");
