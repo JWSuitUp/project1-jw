@@ -149,7 +149,7 @@ int checkSegment(int segment){
 void terminate(){
     resetSegments();
     printString("I'm back!");
-    while(1);
+    interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
 }
 
 //readChar method
