@@ -26,4 +26,10 @@ bcc -ansi -c -o shell.o shell.c
 ld86 -o shell -d shell.o lib.o
 ./loadfile shell
 
+#userlib.c
+as86 lib.asm -o lib.o
+bcc -ansi -c -o userlib.o userlib.c
+ld86 -o userlib -d userlib.o lib.o
+./loadfile userlib
+
 bochs -f opsys.bxrc

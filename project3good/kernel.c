@@ -75,7 +75,7 @@ int printString(char *str){
     
 }
 //readfile method
-int readFile(char *filename, char *buf){
+int readfile(char *filename, char *buf){
     char dirBuffer[512];
     struct directory *dir;
     int i = 0;
