@@ -47,15 +47,8 @@ int main(){
     makeInterrupt21();
     interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
     interrupt(0x21, 0x00, "Done!\n\r\0", 0, 0);
-
-
-    
-    
     while(1);			/* infinite loop */
-
-
-
-    
+    //compare("ab","abbb");
 }
 
 //printString method
@@ -100,10 +93,14 @@ int compare(char *name, char *name2){
     int i = 0;
     for(i; i<= 5; i++){
         if(name[i] != name2[i]){
+            interrupt(0x21, 0x00, "not same", 0, 0);
             return -1;
+            
         }
         else{
+            interrupt(0x21, 0x00, "same", 0, 0);
             return 1;
+            
         }
     }
     
@@ -113,14 +110,15 @@ int executeProgram(char* name, int segment){
     int i = 0;
     int offset = 0x0000;
     char buffer[512];
+    int sectors;
     
     if(checkSegment(segment) == -1){
         return -2;
     }
 
-    readFile(name, buffer);
+    sectors = readfile(name, buffer);
     
-    for (i; buffer[i] != 0xFF; i++) {
+    for (i; i <= sectors*512 ; i++) {
         putInMemory(segment,offset,buffer[i]);
         offset++;
     }
@@ -217,7 +215,7 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
 
     }
     else if(ax == 0x03){
-        readFile(bx,cx);
+        readfile(bx,cx);
     }
     else if(ax == 0x04){
         executeProgram(bx,cx);

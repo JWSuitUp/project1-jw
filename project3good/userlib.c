@@ -1,21 +1,11 @@
-//
-//  userlib.c
-//  
-//
-//  Created by Joanna Wang on 3/23/16.
-//
-//
+#include "userlib.h"
 
-#include <stdio.h>
-#include <userlib.h>
-char ch;
-char buf[100];
 void printString(char *string){
     interrupt(0x21,0x00,string,0,0);
 }
-void readChar(){
-    interrupt(0x21,0x11,ch,0,0);
-}
+//void readChar(){
+//    interrupt(0x21,0x11,ch,0,0);
+//}
 void readString(char *buf){
     interrupt(0x21,0x01,buf,0,0);
 }
