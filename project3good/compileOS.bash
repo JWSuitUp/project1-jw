@@ -14,22 +14,20 @@ bcc -ansi -c -o uprog1.o uprog1.c
 ld86 -o uprog1 -d uprog1.o lib.o
 ./loadfile uprog1
 
-#load uprog2
-as86 lib.asm -o lib.o
+#load uprog2=
 bcc -ansi -c -o uprog2.o uprog2.c
 ld86 -o uprog2 -d uprog2.o lib.o
 ./loadfile uprog2
 
-#load shell.c
-as86 lib.asm -o lib.o
-bcc -ansi -c -o shell.o shell.c
-ld86 -o shell -d shell.o lib.o
-./loadfile shell
-
 #userlib.c
-as86 lib.asm -o lib.o
 bcc -ansi -c -o userlib.o userlib.c
 ld86 -o userlib -d userlib.o lib.o
-./loadfile userlib
+
+#load shell.c
+bcc -ansi -c -o shell.o shell.c
+ld86 -o shell -d shell.o lib.o userlib.o
+./loadfile shell
+
+
 
 bochs -f opsys.bxrc

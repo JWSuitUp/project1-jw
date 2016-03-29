@@ -1,6 +1,5 @@
 
 #include "userlib.h"
-#include "userlib.c"
 
 char ch[300];
 char buf[300];
@@ -22,7 +21,7 @@ main(){
             filename[3]= ch[8];
             filename[4]= ch[9];
             filename[5]= ch[10];
-            //interrupt(0x21,0x00,filename,0,0);
+            interrupt(0x21,0x00,filename,0,0);
 
 //            interrupt(0x21,0x03,filename,buf,0);
 //            interrupt(0x21,0x00,buf,0,0 );

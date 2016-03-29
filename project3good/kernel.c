@@ -93,16 +93,13 @@ int compare(char *name, char *name2){
     int i = 0;
     for(i; i<= 5; i++){
         if(name[i] != name2[i]){
-            interrupt(0x21, 0x00, "not same", 0, 0);
+            //interrupt(0x21, 0x00, "not same", 0, 0);
             return -1;
             
         }
-        else{
-            interrupt(0x21, 0x00, "same", 0, 0);
-            return 1;
-            
-        }
+
     }
+    return 1;
     
 }
 
@@ -118,7 +115,7 @@ int executeProgram(char* name, int segment){
 
     sectors = readfile(name, buffer);
     
-    for (i; i <= sectors*512 ; i++) {
+    for (i; i < sectors*512 ; i++) {
         putInMemory(segment,offset,buffer[i]);
         offset++;
     }
