@@ -41,7 +41,7 @@ int main(){
 ////    
 ////    /*print out the file*/
 //    interrupt(0x21, 0x00, buffer, 0, 0);
-
+    printString("Hello World");
     
     //Test executeProgram
     makeInterrupt21();

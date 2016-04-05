@@ -14,7 +14,7 @@ main(){
         readString(ch);
         
         if(ch[0]== 't' && ch[1] == 'y'&& ch[2] == 'p' && ch[3] == 'e'){
-            
+            int i = 0;
             filename[0]= ch[5];
             filename[1]= ch[6];
             filename[2]= ch[7];
@@ -27,6 +27,7 @@ main(){
 //            interrupt(0x21,0x00,buf,0,0 );
             readfile(filename,buf);
             printString(buf);
+            
         }
         else if(ch[0]== 'e' && ch[1] == 'x'&& ch[2] == 'e' && ch[3] == 'c' && ch[4] == 'u'&& ch[5] == 't' && ch[6] == 'e'){
             filename[0]= ch[8];
