@@ -9,7 +9,7 @@ void printString(char *string){
 void readString(char *buf){
     interrupt(0x21,0x01,buf,0,0);
 }
-void readfile(char *filename, char *buf){
+int readfile(char *filename, char *buf){
     interrupt(0x21,0x03,filename,buf,0);
 }
 void executeProgram(char* name, int segment){
@@ -18,9 +18,9 @@ void executeProgram(char* name, int segment){
 void terminate(){
     interrupt(0x21,0x05,0,0,0);
 }
-void deleteFile(){
-    interrupt(0x21, 0x07, char *fname, 0, 0);
+void deleteFile(char *fname){
+    interrupt(0x21, 0x07, fname, 0, 0);
 }
-void writeFile(){
-    interrupt(0x21, 0x08, char *fname, char *buffer, int sectors);
+void writeFile(char *fname, char *buffer, int sectors){
+    interrupt(0x21, 0x08, fname, buffer, sectors);
 }

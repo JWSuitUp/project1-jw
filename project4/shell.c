@@ -5,6 +5,7 @@ char ch[300];
 char buf[300];
 char filename[6];
 char filename2[6];
+int numSectors = 0;
 main(){
     while (1) {
 //      interrupt(0x21,0x00,"\n",0,0);
@@ -49,7 +50,7 @@ main(){
             filename[3]= ch[10];
             filename[4]= ch[11];
             filename[5]= ch[12];
-            if(deletFile(filename) == -1){
+            if(deleteFile(filename) == -1){
                 printString("File not found");
             }
         }
@@ -69,11 +70,22 @@ main(){
             filename2[4]= ch[16];
             filename2[5]= ch[17];
             
-            if(readfile(filename, buf) == 1){
+            numSectors = readfile(filename, buf);
+            //numSectors = 1;
+            if(numSectors == 1){
                 printString("File not found");
             }
+            else if(writeFile(filename2,buf, numSectors-1) == -1){
+                printString("Disk directory is full");
+            }
+            else if(writeFile(filename2,buf, numSectors-1) == -2){
+                printString("Disk is full");
+            }
             
-            writeFile(filename2)
+        }
+        else if(ch[0] == 'd' && ch[1] == 'i'&& ch[2] == 'r'){
+            
+            
         }
         else{
             interrupt(0x21,0,"Unrecognized command \n ",0,0);

@@ -16,6 +16,9 @@ int checkSegment(int segment);
 void launchProgram(int segment);
 void terminate();
 void resetSegments();
+//int writeSector(char *buffer, int sector);
+//int deleteFile(char *fname);
+//int writeFile(char *fname, char *buffer, int sectors);
 
 struct dirEntry {
     char name[6];
@@ -41,16 +44,31 @@ int main(){
 ////    
 ////    /*print out the file*/
 //    interrupt(0x21, 0x00, buffer, 0, 0);
-    printString("Hello World");
+    printString("Hello World2");
     
     //Test executeProgram
-    makeInterrupt21();
-    interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
-    interrupt(0x21, 0x00, "Done!\n\r\0", 0, 0);
+//    makeInterrupt21();
+//    interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
+//    interrupt(0x21, 0x00, "Done!\n\r\0", 0, 0);
     while(1);			/* infinite loop */
     //compare("ab","abbb");
 }
 
+//writeSector method
+//int writeSector(char *buffer, int sector){
+//    int relSector = mod(sector, 18)+ 1;
+//    int head = mod((sector/18), 2);
+//    int track = sector / 36;
+//    
+//    //Calculate for the values of ax,bx,cx,dx
+//    int ax = 0x03 * 256 + 0x01;
+//    int bx = buffer;
+//    int cx = track * 256 + relSector;
+//    int dx = head * 256 + 0x00;
+//    
+//    interrupt(0x13, ax, bx, cx, dx);
+//    return 1;
+//}
 //printString method
 int printString(char *str){
     int i = 0;

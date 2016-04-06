@@ -3,7 +3,7 @@
 void printString(char *string);
 //void readChar();
 void readString(char *buf);
-void readfile(char *filename, char *buf);
+int readfile(char *filename, char *buf);
 void executeProgram(char* name, int segment);
 void terminate();
 void deleteFile(char *fname);
