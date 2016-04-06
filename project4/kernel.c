@@ -17,6 +17,7 @@ void launchProgram(int segment);
 void terminate();
 void resetSegments();
 int writeSector(char *buffer, int sector);
+//int writeSectorClean(char * buffer, int sector);
 int deleteFile(char *fname);
 int writeFile(char *fname, char *buffer, int sectors);
 
@@ -31,10 +32,9 @@ struct directory {
 
 //main method
 int main(){
-    printString("Hello");
     writeSector("Abby", 2879);
-    printString("End");
-
+    writeSector("Comp OS", 1000);
+    //writeSectorClean("Joanna",1000);
     
     //Test executeProgram
     //    makeInterrupt21();
@@ -44,13 +44,21 @@ int main(){
 }
 
 
-int writeSector(char * buffer, int sector)
-{
-    char clean[512];
-    //write 0s to clean
-    //write buffer up to null char to clean
-    return writeSector(clean, sector);
-}
+//int writeSectorClean(char *buffer, int sector){
+//    char clean[512];
+//    int i;
+//    int j = 0;
+//    //write 0s to clean
+//    for(i = 0; i < 26; i++){
+//        sector[i] = 0x00;
+//    }
+//    //write buffer up to null char to clean
+//    while(buffer[j] != 0){
+//        clean[j] = buffer[j];
+//    }
+//    return writeSector(clean, sector);
+//}
+
 //writeSector
 int writeSector(char *buffer, int sector){
     int relSector = mod(sector, 18)+ 1;
@@ -70,7 +78,7 @@ int writeSector(char *buffer, int sector){
 //deleteFile method
 int deleteFile(char *fname){
     char dirBuffer[512];
-    char diskmap[512]
+    char diskmap[512];
     struct directory *dir;
     int i = 0;
     int j = 0;
@@ -78,14 +86,15 @@ int deleteFile(char *fname){
     readSector(dirBuffer,2);
     for (i; i < 16; i++) {
             if(compare(fname,dir->entries[i].name) == 1){
-                for( j = 0; )
-                diskmap[ dir->entries[i].sectors[j] ] = 0;
+                for( j = 0; j < 25; j++){
+                    diskmap[ dir->entries[i].sectors[j] ] = 0;
+                }
                 
                 dir->entries[i].sectors[0] = 0x00;
                 dir->entries[i].name[0] = 0x00;
                 
-                //writeSector(diskmap,1);
-                //writeSector(dirBuffer,2);
+                writeSector(diskmap,1);
+                writeSector(dirBuffer,2);
                 return 1;
             }
         
