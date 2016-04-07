@@ -4,8 +4,8 @@
 char ch[300];
 char buf[300];
 char filename[6];
-char filename2[6];
-int numSectors = 0;
+//char filename2[6];
+//int numSectors = 0;
 main(){
     while (1) {
 //      interrupt(0x21,0x00,"\n",0,0);
@@ -43,50 +43,50 @@ main(){
             //interrupt(0x21, 0x04, "uprog1\0", 0x2000, 0);
             executeProgram(filename,0x2000);
         }
-        else if(ch[0] == 'd' && ch[1] == 'e'&& ch[2] == 'l' && ch[3] == 'e' && ch[4] == 't'&& ch[5] == 'e'){
-            filename[0]= ch[7];
-            filename[1]= ch[8];
-            filename[2]= ch[9];
-            filename[3]= ch[10];
-            filename[4]= ch[11];
-            filename[5]= ch[12];
-            if(deleteFile(filename) == -1){
-                printString("File not found");
-            }
-        }
-        
-        else if(ch[0] == 'c' && ch[1] == 'o'&& ch[2] == 'p' && ch[3] == 'y'){
-            filename[0]= ch[5];
-            filename[1]= ch[6];
-            filename[2]= ch[7];
-            filename[3]= ch[8];
-            filename[4]= ch[9];
-            filename[5]= ch[10];
-            
-            filename2[0]= ch[12];
-            filename2[1]= ch[13];
-            filename2[2]= ch[14];
-            filename2[3]= ch[15];
-            filename2[4]= ch[16];
-            filename2[5]= ch[17];
-            
-            numSectors = readfile(filename, buf);
-            //numSectors = 1;
-            if(numSectors == 1){
-                printString("File not found");
-            }
-            else if(writeFile(filename2,buf, numSectors-1) == -1){
-                printString("Disk directory is full");
-            }
-            else if(writeFile(filename2,buf, numSectors-1) == -2){
-                printString("Disk is full");
-            }
-            
-        }
-        else if(ch[0] == 'd' && ch[1] == 'i'&& ch[2] == 'r'){
-            
-            
-        }
+//        else if(ch[0] == 'd' && ch[1] == 'e'&& ch[2] == 'l' && ch[3] == 'e' && ch[4] == 't'&& ch[5] == 'e'){
+//            filename[0]= ch[7];
+//            filename[1]= ch[8];
+//            filename[2]= ch[9];
+//            filename[3]= ch[10];
+//            filename[4]= ch[11];
+//            filename[5]= ch[12];
+//            if(deleteFile(filename) == -1){
+//                printString("File not found");
+//            }
+//        }
+//        
+//        else if(ch[0] == 'c' && ch[1] == 'o'&& ch[2] == 'p' && ch[3] == 'y'){
+//            filename[0]= ch[5];
+//            filename[1]= ch[6];
+//            filename[2]= ch[7];
+//            filename[3]= ch[8];
+//            filename[4]= ch[9];
+//            filename[5]= ch[10];
+//            
+//            filename2[0]= ch[12];
+//            filename2[1]= ch[13];
+//            filename2[2]= ch[14];
+//            filename2[3]= ch[15];
+//            filename2[4]= ch[16];
+//            filename2[5]= ch[17];
+//            
+//            numSectors = readfile(filename, buf);
+//            //numSectors = 1;
+//            if(numSectors == 1){
+//                printString("File not found");
+//            }
+//            else if(writeFile(filename2,buf, numSectors-1) == -1){
+//                printString("Disk directory is full");
+//            }
+//            else if(writeFile(filename2,buf, numSectors-1) == -2){
+//                printString("Disk is full");
+//            }
+//            
+//        }
+//        else if(ch[0] == 'd' && ch[1] == 'i'&& ch[2] == 'r'){
+//            
+//            
+//        }
         else{
             interrupt(0x21,0,"Unrecognized command \n ",0,0);
         }

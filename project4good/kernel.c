@@ -1,7 +1,7 @@
-//kernel.c  project3good
+//kernel.c  project4
 //author: Joanna Wang
 //Date: 2/25/2016
-//prototype 
+//prototype
 void putChar(char letter, int row, int col, int color);
 void putString(char* letter, int row, int col, int color);
 int printString(char *str);
@@ -16,9 +16,9 @@ int checkSegment(int segment);
 void launchProgram(int segment);
 void terminate();
 void resetSegments();
-//int writeSector(char *buffer, int sector);
-//int deleteFile(char *fname);
-//int writeFile(char *fname, char *buffer, int sectors);
+int writeSector(char *buffer, int sector);
+int deleteFile(char *fname);
+int writeFile(char *fname, char *buffer, int sectors);
 
 struct dirEntry {
     char name[6];
@@ -31,44 +31,130 @@ struct directory {
 
 //main method
 int main(){
-    //Test readFile
-//    struct directory * dir;
-//    char buffer[13312];		/* the maximum size of a file*/
-//    
-//
-//    makeInterrupt21();
-////    
-////    /*read the file into buffer*/
-//    interrupt(0x21, 0x03, "messag\0", buffer, 0);
-////    
-////    
-////    /*print out the file*/
-//    interrupt(0x21, 0x00, buffer, 0, 0);
-    //printString("Hello World2");
+        char buf[512];
+    //    //writeSector("Abby", 2879);
+    //    printString("go2");
+    //    //deleteFile("messag");
+    //    readfile("messag",buf);
+    //    printString("read");
+        writeFile("exampl", buf, 1);
+    //    printString("end");
     
+    //printString("main");
     //Test executeProgram
-    makeInterrupt21();
-    interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
-    interrupt(0x21, 0x00, "Done!\n\r\0", 0, 0);
+//    makeInterrupt21();
+//    interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
+//    interrupt(0x21, 0x00, "Done!\n\r\0", 0, 0);
     while(1);			/* infinite loop */
-    //compare("ab","abbb");
 }
 
-//writeSector method
-//int writeSector(char *buffer, int sector){
-//    int relSector = mod(sector, 18)+ 1;
-//    int head = mod((sector/18), 2);
-//    int track = sector / 36;
-//    
-//    //Calculate for the values of ax,bx,cx,dx
-//    int ax = 0x03 * 256 + 0x01;
-//    int bx = buffer;
-//    int cx = track * 256 + relSector;
-//    int dx = head * 256 + 0x00;
-//    
-//    interrupt(0x13, ax, bx, cx, dx);
-//    return 1;
-//}
+
+
+//writeSector
+int writeSector(char *buffer, int sector){
+    int relSector = mod(sector, 18)+ 1;
+    int head = mod((sector/18), 2);
+    int track = sector / 36;
+    
+    //Calculate for the values of ax,bx,cx,dx
+    int ax = 0x03 * 256 + 0x01;
+    int bx = buffer;
+    int cx = track * 256 + relSector;
+    int dx = head * 256 + 0x00;
+    
+    interrupt(0x13, ax, bx, cx, dx);
+    return 1;
+}
+
+//deleteFile method
+int deleteFile(char *fname){
+    char dirBuffer[512];
+    char diskmap[512];
+    struct directory *dir;
+    int i = 0;
+    int j = 0;
+    dir = dirBuffer;
+    readSector(dirBuffer,2);
+    readSector(diskmap,1);
+    for (i; i < 16; i++) {
+        if(compare(fname,dir->entries[i].name) == 1){
+            for( j = 0; j < 25 && dir->entries[i].sectors[j]!=0; j++){
+                diskmap[ dir->entries[i].sectors[j] ] = 0;
+            }
+            
+            dir->entries[i].sectors[0] = 0x00;
+            dir->entries[i].name[0] = 0x00;
+            
+            writeSector(diskmap,1);
+            writeSector(dirBuffer,2);
+            return 1;
+        }
+        
+    }
+    return -1;
+}
+
+//writeFile method
+int writeFile(char *fname, char *buffer, int sectors){
+    struct directory *dir;
+    char diskmap[512];
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    dir = buffer;
+    readSector(buffer,2);
+    readSector(diskmap,1);
+    //printString("start to write");
+    for(i; i < 16; i++){
+        if(compare(fname,dir->entries[i].name) == 1){
+            while(j != 25 && j != sectors){
+                writeSector(&buffer[j*512], dir->entries[i].sectors[j]);
+                j++;
+            }
+            //printString("find it. writing");
+            for( j = 0; j < 25 && dir->entries[i].sectors[j]!=0; j++){
+                diskmap[ dir->entries[i].sectors[j] ] = 0xFF;
+            }
+            if(j == 25){
+                writeSector(diskmap,1);
+                writeSector(buffer,2);
+                return -2;
+            }
+            else{
+                writeSector(diskmap,1);
+                writeSector(buffer,2);
+                return j+1;
+            }
+        }
+    }
+    
+    for(i = 0; i < 16; i++){
+        if(dir->entries[i].name[0] == 0){
+            while(k != 25 && k != sectors){
+                writeSector(&buffer[j*512], dir->entries[i].sectors[k]);
+                k++;
+            }
+            //printString("didn't find it. writing");
+            for( j = 0; j < 25 && dir->entries[i].sectors[j]!=0; j++){
+                diskmap[ dir->entries[i].sectors[j] ] = 0xFF;
+            }
+            if(k ==  25){
+                writeSector(diskmap,1);
+                writeSector(buffer,2);
+                return -2;
+            }
+            else{
+                writeSector(diskmap,1);
+                writeSector(buffer,2);
+                return k+1;
+            }
+        }
+        else{
+            return -1;
+        }
+    }
+}
+
 //printString method
 int printString(char *str){
     int i = 0;
@@ -80,8 +166,8 @@ int printString(char *str){
         interrupt(0x10, ax, 0, 0, 0);
         i++;
     }
-     result = i - 1;
-
+    result = i - 1;
+    
     return result;
     
 }
@@ -93,7 +179,7 @@ int readfile(char *filename, char *buf){
     int j = 0;
     dir = dirBuffer;
     readSector(dirBuffer,2);
-
+    
     for (i; i < 16; i++) {
         if(compare(filename,dir->entries[i].name) == 1){
             while(dir->entries[i].sectors[j] != 0) {
@@ -104,7 +190,7 @@ int readfile(char *filename, char *buf){
         }
     }
     return j+1;
-
+    
 }
 
 int compare(char *name, char *name2){
@@ -115,7 +201,7 @@ int compare(char *name, char *name2){
             return -1;
             
         }
-
+        
     }
     return 1;
     
@@ -130,7 +216,7 @@ int executeProgram(char* name, int segment){
     if(checkSegment(segment) == -1){
         return -2;
     }
-
+    
     sectors = readfile(name, buffer);
     
     for (i; i < sectors*512 ; i++) {
@@ -140,7 +226,7 @@ int executeProgram(char* name, int segment){
     
     launchProgram(segment);
     return 0;
-
+    
 }
 
 int checkSegment(int segment){
@@ -167,7 +253,7 @@ void terminate(){
 
 //readChar method
 int readChar(){
-
+    
     return interrupt(0x16, 0x00, 0, 0, 0);
 }
 
@@ -177,15 +263,15 @@ int readString(char *buf){
     int i = 0;
     int result;
     while(i == 0 ||buf[i-1] != 0x0D){
-
+        
         result =readChar()%256;
         buf[i] =result;
         interrupt(0x10,0x0E*256+result, 0, 0, 0);
         i++;
         
     }
-
-
+    
+    
     buf[i++] = 0;
     return i - 1;
 }
@@ -217,7 +303,7 @@ int mod(int divider, int dividend){
 //The handelInterrupt21 function
 int handleInterrupt21(int ax, int bx, int cx, int dx){
     if (ax == 0x00) {
-         printString(bx);
+        printString(bx);
         return 1;
     }
     else if(ax == 0x11){
@@ -227,7 +313,9 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
     else if(ax == 0x01){
         readString(bx);
         return 1;
-
+    }
+    else if(ax == 0x02){
+        readSector(bx,cx);
     }
     else if(ax == 0x03){
         readfile(bx,cx);
@@ -238,8 +326,14 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
     else if(ax == 0x05){
         terminate();
     }
+    else if(ax == 0x07){
+        deleteFile(bx);
+    }
+    else if(ax == 0x08){
+        writeFile(bx,cx,dx);
+    }
     else{
-    return -1;
+        return -1;
     }
 }
 

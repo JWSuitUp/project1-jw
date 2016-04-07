@@ -1,4 +1,4 @@
-//kernel.c  project4
+//kernel.c  project3good
 //author: Joanna Wang
 //Date: 2/25/2016
 //prototype
@@ -16,10 +16,9 @@ int checkSegment(int segment);
 void launchProgram(int segment);
 void terminate();
 void resetSegments();
-int writeSector(char *buffer, int sector);
-//int writeSectorClean(char * buffer, int sector);
-int deleteFile(char *fname);
-int writeFile(char *fname, char *buffer, int sectors);
+//int writeSector(char *buffer, int sector);
+//int deleteFile(char *fname);
+//int writeFile(char *fname, char *buffer, int sectors);
 
 struct dirEntry {
     char name[6];
@@ -32,118 +31,44 @@ struct directory {
 
 //main method
 int main(){
-    writeSector("Abby", 2879);
-    writeSector("Comp OS", 1000);
-    //writeSectorClean("Joanna",1000);
+    //Test readFile
+    //    struct directory * dir;
+    //    char buffer[13312];		/* the maximum size of a file*/
+    //
+    //
+    //    makeInterrupt21();
+    ////
+    ////    /*read the file into buffer*/
+    //    interrupt(0x21, 0x03, "messag\0", buffer, 0);
+    ////
+    ////
+    ////    /*print out the file*/
+    //    interrupt(0x21, 0x00, buffer, 0, 0);
+    //printString("Hello World2");
     
     //Test executeProgram
-    //    makeInterrupt21();
-    //    interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
-    //    interrupt(0x21, 0x00, "Done!\n\r\0", 0, 0);
+    makeInterrupt21();
+    interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
+    interrupt(0x21, 0x00, "Done!\n\r\0", 0, 0);
     while(1);			/* infinite loop */
+    //compare("ab","abbb");
 }
 
-
-//int writeSectorClean(char *buffer, int sector){
-//    char clean[512];
-//    int i;
-//    int j = 0;
-//    //write 0s to clean
-//    for(i = 0; i < 26; i++){
-//        sector[i] = 0x00;
-//    }
-//    //write buffer up to null char to clean
-//    while(buffer[j] != 0){
-//        clean[j] = buffer[j];
-//    }
-//    return writeSector(clean, sector);
+//writeSector method
+//int writeSector(char *buffer, int sector){
+//    int relSector = mod(sector, 18)+ 1;
+//    int head = mod((sector/18), 2);
+//    int track = sector / 36;
+//
+//    //Calculate for the values of ax,bx,cx,dx
+//    int ax = 0x03 * 256 + 0x01;
+//    int bx = buffer;
+//    int cx = track * 256 + relSector;
+//    int dx = head * 256 + 0x00;
+//
+//    interrupt(0x13, ax, bx, cx, dx);
+//    return 1;
 //}
-
-//writeSector
-int writeSector(char *buffer, int sector){
-    int relSector = mod(sector, 18)+ 1;
-    int head = mod((sector/18), 2);
-    int track = sector / 36;
-    
-    //Calculate for the values of ax,bx,cx,dx
-    int ax = 0x03 * 256 + 0x01;
-    int bx = buffer;
-    int cx = track * 256 + relSector;
-    int dx = head * 256 + 0x00;
-    
-    interrupt(0x13, ax, bx, cx, dx);
-    return 1;
-}
-
-//deleteFile method
-int deleteFile(char *fname){
-    char dirBuffer[512];
-    char diskmap[512];
-    struct directory *dir;
-    int i = 0;
-    int j = 0;
-    dir = dirBuffer;
-    readSector(dirBuffer,2);
-    for (i; i < 16; i++) {
-            if(compare(fname,dir->entries[i].name) == 1){
-                for( j = 0; j < 25; j++){
-                    diskmap[ dir->entries[i].sectors[j] ] = 0;
-                }
-                
-                dir->entries[i].sectors[0] = 0x00;
-                dir->entries[i].name[0] = 0x00;
-                
-                writeSector(diskmap,1);
-                writeSector(dirBuffer,2);
-                return 1;
-            }
-        
-    }
-    return -1;
-}
-
-//writeFile method
-int writeFile(char *fname, char *buffer, int sectors){
-    struct directory *dir;
-    int i = 0;
-    int j = 0;
-    int k = 0;
-    dir = buffer;
-    readSector(buffer,2);
-    for(i; i < 16; i++){
-        if(compare(fname,dir->entries[i].name) == 1){
-            while(j != 25 || j != sectors){
-                writeSector(&buffer[j*512], dir->entries[i].sectors[j]);
-                j++;
-            }
-            if(j == 25){
-                return -2;
-            }
-            else{
-                return j+1;
-            }
-        }
-    }
-    
-    for(i = 0; i < 16; i++){
-        if(dir->entries[i].name[0] == 0){
-            while(k != 25 || k != sectors){
-                writeSector(&buffer[j*512], dir->entries[i].sectors[k]);
-                k++;
-            }
-            if(k ==  25){
-                return -2;
-            }
-            else{
-                return k+1;
-            }
-        }
-        else{
-            return -1;
-        }
-    }
-}
-
 //printString method
 int printString(char *str){
     int i = 0;

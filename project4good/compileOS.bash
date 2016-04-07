@@ -1,3 +1,4 @@
+#!/bin/bash
 source ../PathSetter.bash
 bcc -ansi -c -o kernel.o kernel.c #compile the kernel
 as86 kernel.asm -o kernel_asm.o #assemble the kernel.asm file
@@ -20,12 +21,11 @@ ld86 -o uprog2 -d uprog2.o lib.o
 
 #userlib.c
 bcc -ansi -c -o userlib.o userlib.c
-ld86 -o userlib -d userlib.o lib.o
 
 #load shell.c
-bcc -ansi -c -o shell.o shell.c
-ld86 -o shell -d shell.o lib.o userlib.o
-./loadfile shell
+#bcc -ansi -c -o shell.o shell.c
+#ld86 -o shell -d shell.o lib.o userlib.o
+#./loadfile shell
 
 
 
