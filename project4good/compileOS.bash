@@ -23,9 +23,9 @@ ld86 -o uprog2 -d uprog2.o lib.o
 bcc -ansi -c -o userlib.o userlib.c
 
 #load shell.c
-#bcc -ansi -c -o shell.o shell.c
-#ld86 -o shell -d shell.o lib.o userlib.o
-#./loadfile shell
+bcc -ansi -c -o shell.o shell.c
+ld86 -o shell -d shell.o lib.o userlib.o
+./loadfile shell
 
 
 
