@@ -1,5 +1,5 @@
-//kernel.c  project4
-//author: Joanna Wang
+//kernel.c  project5
+//author: Joanna Wang, Abby
 //Date: 2/25/2016
 //prototype
 void putChar(char letter, int row, int col, int color);
@@ -19,6 +19,9 @@ void resetSegments();
 int writeSector(char *buffer, int sector);
 int deleteFile(char *fname);
 int writeFile(char *fname, char *buffer, int sectors);
+void handleTimerInterrupt(int segment, int stackPointer);
+void returnFromTimer(int segment, int stackPointer);
+
 
 struct dirEntry {
     char name[6];
@@ -45,6 +48,7 @@ int main(){
     makeInterrupt21();
     interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
     interrupt(0x21, 0x00, "Done!\n\r\0", 0, 0);
+    makeTimerInterrupt();
     while(1);			/* infinite loop */
 //    char buffer[10000];		/* the maximum size of a file*/
 //    int i = 0;
@@ -371,7 +375,14 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
     else{
         return -1;
     }
+    
 }
+
+void handleTimerInterrupt(int segment, int stackPointer){
+    printString("tic");
+    returnFromTimer(segment, stackPointer);
+}
+
 
 //the putChar function
 //Parameters: letter to be printed, row and col of the desired location, color of the letters
