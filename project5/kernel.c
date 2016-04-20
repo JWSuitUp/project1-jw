@@ -11,7 +11,7 @@ int readSector(char *buf, int absSector);
 int handleInterrupt21(int ax, int bx, int cx, int dx);
 int readfile(char *filename, char *buf);
 int compare(char *name, char *name2);
-int executeProgram(char* name, int segment);
+int executeProgram(char* name);
 int checkSegment(int segment);
 void launchProgram(int segment);
 void terminate();
@@ -229,7 +229,7 @@ int readfile(char *filename, char *buf){
             }
         }
     }
-    return 26;
+    return -1;
     
 }
 
@@ -247,25 +247,39 @@ int compare(char *name, char *name2){
     
 }
 
-int executeProgram(char* name, int segment){
+int executeProgram(char* name){
     int i = 0;
     int offset = 0x0000;
     char buffer[512];
     int sectors;
-    
-    if(checkSegment(segment) == -1){
+    int segment = getFreeMemorySegment();
+    struct PCB *pcb = getFreePCB();
+    if(segment == -1){
         return -2;
     }
     
     sectors = readfile(name, buffer);
+    if(sectors == -1){
+        return -1;
+    }
     
     for (i; i < sectors*512 ; i++) {
         putInMemory(segment,offset,buffer[i]);
         offset++;
     }
+    pcb->name[0] = name[0];
+    pcb->name[1] = name[1];
+    pcb->name[2] = name[2];
+    pcb->name[3] = name[3];
+    pcb->name[4] = name[4];
+    pcb->name[5] = name[5];
     
-    launchProgram(segment);
-    return 0;
+    pcb->state = STARTING;
+    pcb->segment = segment;
+    pcb->stackPointer = 0xFF00;
+
+    initializeProgram(segment);
+    return 1;
     
 }
 
@@ -361,7 +375,7 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
         readfile(bx,cx);
     }
     else if(ax == 0x04){
-        executeProgram(bx,cx);
+        executeProgram(bx);
     }
     else if(ax == 0x05){
         terminate();
