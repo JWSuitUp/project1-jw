@@ -8,11 +8,13 @@ int i;
 char filename2[6];
 int numSectors = 0;
 main(){
+    enableInterrupts();
     while (1) {
         //      interrupt(0x21,0x00,"\n",0,0);
         //      interrupt(0x21,0x00,"Shell> ",0,0);
         //      interrupt(0x21,0x01,ch,0,0 );
         //printString("\n");
+        
         printString("Shell> ");
         readString(ch);
         

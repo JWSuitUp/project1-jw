@@ -22,7 +22,9 @@ int writeFile(char *fname, char *buffer, int sectors);
 void handleTimerInterrupt(int segment, int stackPointer);
 void returnFromTimer(int segment, int stackPointer);
 void kStrCopy(char *src, char *dest, int len);
-
+void yield();
+void showProcesses();
+int kill(int segment);
 
 struct dirEntry {
     char name[6];
@@ -35,6 +37,8 @@ struct directory {
 
 //main method
 int main(){
+    enableInterrupts();
+
         //char buf[512];
     //    //writeSector("Abby", 2879);
     //    printString("go2");
@@ -410,6 +414,16 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
     else if(ax == 0x08){
         writeFile(bx,cx,dx);
     }
+    else if(ax == 0x09){
+        yield();
+        return 1;
+    }
+    else if(ax == 0x0A){
+        
+    }
+    else if(ax == 0x0B){
+        
+    }
     else{
         return -1;
     }
@@ -423,7 +437,9 @@ void handleTimerInterrupt(int segment, int stackPointer){
     setKernelDataSegment();
     pcb = getFreePCB();
     
-    
+    if(pcb->state != DEFUNCT){
+        
+    }
     pcb->stackPointer = stackPointer;
     pcb->state = READY;
     addToReady(pcb);
@@ -475,4 +491,10 @@ void kStrCopy(char *src, char *dest, int len) {
             return;
         }
     }
+}
+
+void yield(){
+    setKernelDataSegment();
+    running->state = READY;
+    restoreDataSegment();
 }

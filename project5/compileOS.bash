@@ -21,6 +21,10 @@ ld86 -o uprog2 -d uprog2.o lib.o
 #userlib.c
 bcc -ansi -c -o userlib.o userlib.c
 
+#testing.c
+bcc -ansi -c -o testing.o testing.c
+
+
 #load shell.c
 bcc -ansi -c -o shell.o shell.c
 ld86 -o shell -d shell.o lib.o userlib.o
