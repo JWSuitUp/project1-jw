@@ -3,14 +3,14 @@
 void initializeProcStructures(){
     int i = 0;
     int j = 0;
-    for(i; i < 8; i++){
+    for(; i < 8; i++){
         memoryMap[i] = 0;
     }
-    for(j; j < 8; j++){
+    for(; j < 8; j++){
         pcbPool[j].name[0] = 0x00;
-        state = 0;
-        segment = 0;
-        stackPointers = 0x0000;
+        pcbPool[j].state = 0;
+        pcbPool[j].segment = 0;
+        pcbPool[j].stackPointer = 0x0000;
     }
     
     idleProc.name[0] = 'I';
@@ -19,15 +19,15 @@ void initializeProcStructures(){
     idleProc.name[3] = 'E';
     idleProc.state = 1;
     idleProc.segment = 0;
-    stackPointers =0x0000;
-    running = idleProc;
+    idleProc.stackPointer =0x0000;
+    running = &idleProc;
     readyHead = 0x00;
     readyTail = 0x00;
 }
 
 int getFreeMemorySegment(){
     int i = 0;
-    for(i; i < 8; i++){
+    for(; i < 8; i++){
         if(memoryMap[i] == 0){
             return i;
         }
@@ -41,10 +41,10 @@ void releaseMemorySegment(int seg){
 
 struct PCB *getFreePCB(){
     int i = 0;
-    for(i;i < 8; i++){
-        if(pcbPool[i].state == 0){
-            pcbPool[i].state = 4;
-            return *pcbPool[i];
+    for(;i < 8; i++){
+        if(pcbPool[i].state == DEFUNCT){
+            pcbPool[i].state = STARTING;
+            return &pcbPool[i];
         }
     }
     return 0x00;
@@ -52,21 +52,26 @@ struct PCB *getFreePCB(){
 }
 
 void releasePCB(struct PCB *pcb){
-    pcb.state = 0;
-    pcb.next = 0x00;
-    pcb.prev = 0x00;
-    pcb.name[0] = 0x00;
+    pcb->state = DEFUNCT;
+    pcb->next = 0x00;
+    pcb->prev = 0x00;
+    pcb->name[0] = 0x00;
     
 }
 
 void addToReady(struct PCB *pcb){
-    readyTail.next = pcb;
-    pcb = readyTail;
-    
+    if(readyHead == NULL){
+        readyHead = pcb;
+        readyTail = pcb;
+    }
+    else{
+        readyTail->next = pcb;
+        pcb = readyTail;
+    }
 }
 
 struct PCB *removeFromReady(){
-    PCB temp = readyHead;
-    readyHead = readyHead.next;
-    return *temp;
+    struct PCB * temp = readyHead;
+    readyHead = readyHead->next;
+    return temp;
 }
