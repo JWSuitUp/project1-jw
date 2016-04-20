@@ -393,8 +393,19 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
 }
 
 void handleTimerInterrupt(int segment, int stackPointer){
+    struct PCB *pcb = getFreePCB();
+    struct PCB *head;
+    pcb->stackPointer = stackPointer;
+    pcb->state = READY;
+    addToReady(pcb);
+    head = removeFromReady();
+    if(head == NULL){
+        head = idleProc;
+    }
+    head->state = RUNNING;
+    running = head;
     printString("tic");
-    returnFromTimer(segment, stackPointer);
+    returnFromTimer(head->segment, head->stackPointer);
 }
 
 
