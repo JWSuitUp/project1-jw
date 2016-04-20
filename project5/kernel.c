@@ -21,6 +21,7 @@ int deleteFile(char *fname);
 int writeFile(char *fname, char *buffer, int sectors);
 void handleTimerInterrupt(int segment, int stackPointer);
 void returnFromTimer(int segment, int stackPointer);
+void kStrCopy(char *src, char *dest, int len);
 
 
 struct dirEntry {
@@ -252,8 +253,17 @@ int executeProgram(char* name){
     int offset = 0x0000;
     char buffer[512];
     int sectors;
-    int segment = getFreeMemorySegment();
-    struct PCB *pcb = getFreePCB();
+    int segment;
+    struct PCB *pcb;
+    
+    setKernelDataSegment();
+    pcb = getFreePCB();
+    restoreDataSegment();
+
+    setKernelDataSegment();
+    segment = getFreeMemorySegment()
+    restoreDataSegment();
+
     if(segment == -1){
         return -2;
     }
@@ -267,16 +277,19 @@ int executeProgram(char* name){
         putInMemory(segment,offset,buffer[i]);
         offset++;
     }
-    pcb->name[0] = name[0];
-    pcb->name[1] = name[1];
-    pcb->name[2] = name[2];
-    pcb->name[3] = name[3];
-    pcb->name[4] = name[4];
-    pcb->name[5] = name[5];
+//    pcb->name[0] = name[0];
+//    pcb->name[1] = name[1];
+//    pcb->name[2] = name[2];
+//    pcb->name[3] = name[3];
+//    pcb->name[4] = name[4];
+//    pcb->name[5] = name[5];
+    kStrCopy(name, pcb->name, 6);
     
+    setKernelDataSegment();
     pcb->state = STARTING;
     pcb->segment = segment;
     pcb->stackPointer = 0xFF00;
+    restoreDataSegment();
 
     initializeProgram(segment);
     return 1;
@@ -300,8 +313,19 @@ int checkSegment(int segment){
 }
 
 void terminate(){
-    resetSegments();
-    printString("I'm back!");
+    struct PCB *pcb;
+    
+    setKernelDataSegment();
+    pcb = running;
+    restoreDataSegment();
+    
+    setKernelDataSegment();
+    releaseMemorySegment(pcb->segment);
+    releasePCB(pcb);
+    restoreDataSegment();
+
+//    resetSegments();
+//    printString("I'm back!");
     interrupt(0x21, 0x04, "shell\0", 0x2000, 0);
 }
 
@@ -393,18 +417,32 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
 }
 
 void handleTimerInterrupt(int segment, int stackPointer){
-    struct PCB *pcb = getFreePCB();
+    struct PCB *pcb ;
     struct PCB *head;
+    
+    setKernelDataSegment();
+    pcb = getFreePCB();
+    
+    
     pcb->stackPointer = stackPointer;
     pcb->state = READY;
     addToReady(pcb);
+    
     head = removeFromReady();
+    restoreDataSegment();
+    
+    setKernelDataSegment();
     if(head == NULL){
         head = idleProc;
     }
+    
     head->state = RUNNING;
+    restoreDataSegment();
+
+    setKernelDataSegment();
     running = head;
-    printString("tic");
+    restoreDataSegment();
+    //printString("tic");
     returnFromTimer(head->segment, head->stackPointer);
 }
 
@@ -426,5 +464,15 @@ void putString(char* letter, int row, int col, int color){
         putInMemory(0xB000, (add + i)*2 + 0x8000, letter[i]); //calculate the address to store the character
         putInMemory(0xB000, (add + i)*2 + 0x8000 + 1, color); //calculate the address to store the color
         i++;
+    }
+}
+
+void kStrCopy(char *src, char *dest, int len) {
+    int i = 0;
+    for (i = 0; i < len; i++) {
+        putInMemory(0x1000, dest+i, src[i]);
+        if (src[i] == 0x00) {
+            return;
+        }
     }
 }
