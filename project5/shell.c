@@ -6,6 +6,7 @@ char buf[300];
 char filename[6];
 int i;
 char filename2[6];
+int segment;
 int numSectors = 0;
 main(){
     enableInterrupts();
@@ -95,8 +96,18 @@ main(){
 ////                        }
 ////                    }
 ////                }
-//        else{
-//            interrupt(0x21,0,"Unrecognized command \n ",0,0);
-//        }
+        else if(ch[0]== 'p' && ch[1] == 's'){
+            showProcesses();
+            
+        }
+        else if(ch[0]== 'k' && ch[1] == 'i' && ch[2] == 'l'&& ch[3] == 'l'){
+            segment = (int)ch[5];
+            kill(segment);
+        }
+        else{
+            interrupt(0x21,0,"Unrecognized command \n ",0,0);
+        }
+        
+        
     }
 }

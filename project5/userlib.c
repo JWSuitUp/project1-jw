@@ -24,3 +24,12 @@ void deleteFile(char *fname){
 void writeFile(char *fname, char *buffer, int sectors){
     interrupt(0x21, 0x08,fname,buffer,sectors);
 }
+void yield(){
+    interrupt(0x21, 0x09,0,0,0);
+}
+void showProcesses(){
+    interrupt(0x21, 0x0A,0,0,0);
+}
+int kill(int segment){
+    interrupt(0x21,0x0B,segment,0,0);
+}

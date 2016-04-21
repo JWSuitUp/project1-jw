@@ -8,6 +8,7 @@ void executeProgram(char* name, int segment);
 void terminate();
 void deleteFile(char *fname);
 void writeFile(char *fname, char *buffer, int sectors);
-
-
+void yield();
+void showProcesses();
+int kill(int segment);
 #endif /* userlib_h */

@@ -419,10 +419,11 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
         return 1;
     }
     else if(ax == 0x0A){
-        
+        showProcesses();
+        return 1;
     }
     else if(ax == 0x0B){
-        
+        kill(bx);
     }
     else{
         return -1;
@@ -497,4 +498,37 @@ void yield(){
     setKernelDataSegment();
     running->state = READY;
     restoreDataSegment();
+}
+
+void showProcesses(){
+    int i = 0;
+    setKernelDataSegment();
+    struct PCB *pcb;
+    for(i; i < 8; i++){
+        if(pcb->state == RUNNING){
+            pcb->name = memoryMap[i]->name;
+            pcb->segment = memoryMap[i]->segment;
+            segment = (pcb->segment - 0x2000)/0x1000;
+            printString(pcb->name);
+            printString(", ");
+            printString(segment);
+            printString("\n");
+        }
+        
+    }
+    restoreDataSegment();
+}
+
+int kill(int segment){
+    int i = 0;
+    int index;
+    setKernelDataSegment();
+    struct PCB *pcb;
+    index = (pcb->segment - 0x2000)/0x1000
+    if(memoryMap[index]->state == RUNNING){
+        terminate();
+        return 1;
+    }
+    return -1;
+        
 }
